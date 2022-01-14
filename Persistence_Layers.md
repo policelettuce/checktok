@@ -1,5 +1,6 @@
 ## Список сущностей, свойств и связей
-![creaturesbelike](https://user-images.githubusercontent.com/95046139/147712707-d8d8788c-2e72-40ce-a650-7c5b5e1cd4a6.png)
+![creaturesbelike_NEW](https://user-images.githubusercontent.com/95046139/149466885-f635ef89-bfcd-4e4d-88bc-f6a663bca8e6.jpg)
+
 
 
 **Связи:**
@@ -16,5 +17,6 @@ Stat и Top - БД, хранящие в себе статистические д
 Сущность user имеет связь только с сущностью report, т.к. отчеты доступны только зарегистрированным пользователям. Сделать запрос к БД Stat и Top может и не вошедший в систему пользователь, т.е. гость. При этом такой запрос никак не влияет на сами БД. Также обращение к БД идет не с помощью foreign key, а в виде ввода пользователем юзернейма на сайте и поиска по БД (введенный юзернейм нигде не сохраняется).
 
 ## Даталогическая модель
-![datalogicalmaneee](https://user-images.githubusercontent.com/95046139/147712633-c2fbeddb-43a1-4699-a82d-6f4cd82c8a58.jpg)
+![datalogicalmaneee_NEW](https://user-images.githubusercontent.com/95046139/149466902-317da1ab-7ba7-44a2-b11d-eb2fb34eacf8.jpg)
+
 
