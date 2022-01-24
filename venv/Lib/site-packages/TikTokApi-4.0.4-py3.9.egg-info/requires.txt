@@ -1,4 +1,0 @@
-requests
-playwright
-selenium_stealth
-selenium
