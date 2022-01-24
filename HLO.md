@@ -15,7 +15,7 @@
  
  ## Архитектура
  
- Веб-приложение на микрофреймворке Flask и ЯП Python. Базы данных - SQL. Для работы с БД используется расширение Flask-SQLalchemy. Для получения данных из TikTok используется TikTokApi - third-party API wrapper для python. [Подробнее здесь.](https://dteather.com/TikTok-Api/) Templates страниц сайта написаны на HTML + JS с использованием разметки Jinja2 для вставки синтакса Python.
+ Веб-приложение на микрофреймворке Flask и ЯП Python. Базы данных - SQLite. Для работы с БД используется расширение Flask-SQLalchemy. Для получения данных из TikTok используется TikTokApi - third-party API wrapper для python. [Подробнее здесь.](https://dteather.com/TikTok-Api/) Templates страниц сайта написаны на HTML + JS с использованием разметки Jinja2 для вставки синтакса Python.
  
  ## Высокоуровневое описание деталей
  
