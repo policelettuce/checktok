@@ -1,11 +1,11 @@
 from gevent import monkey
 monkey.patch_all()
-from flask import Flask, render_template, request, redirect, flash
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 import calculator
-from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask import Flask, render_template, request, flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_required, login_user, logout_user, UserMixin, current_user
 
 app = Flask(__name__)
 app.secret_key = "Cactus is truly a tsundere among other plants"
@@ -65,6 +65,7 @@ class Top(db.Model):
 def load_user(user_id):
     return User.query.get(user_id)
 
+
 @app.route('/')
 def hello_world():
     return render_template("index.php")
@@ -73,7 +74,7 @@ def hello_world():
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
     login = request.form.get('login')
-    password= request.form.get('password')
+    password = request.form.get('password')
 
     if request.method == "POST":
         if login and password:
@@ -105,8 +106,8 @@ def register_page():
         elif password != confirm_password:
             flash("Пароли не совпадают! :(")
         else:
-            hash = generate_password_hash(password)
-            new_user = User(login=login, password=hash)
+            hash_pass = generate_password_hash(password)
+            new_user = User(login=login, password=hash_pass)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user)
@@ -157,9 +158,32 @@ def calc():
     return render_template('income.php', data=data)
 
 
-@app.route('/profile')
+@app.route('/profile', methods=['POST', 'GET'])
+@login_required
 def profile():
-    return render_template('profile.php')
+    if request.method == 'POST':
+        if request.form['username'] != "":
+            calculator.create_report(str(request.form['username']), current_user.get_id())
+
+    query = db.session.query(Report).filter(Report.ownerid == current_user.get_id()).all()
+    return render_template('profile.php', query=query)
+
+
+@app.route('/order_report')
+@login_required
+def order_report():
+    return render_template('oreder_report.php')
+
+
+@app.route('/report_page', methods=['POST', 'GET'])
+@login_required
+def report_page():
+    if request.method == 'POST':
+        query = db.session.query(Report).filter(Report.id == request.form['report_id']).first()
+        return render_template('report_page.php', query=query)
+    else:
+        query = db.session.query(Report).filter(Report.ownerid == current_user.get_id()).all()
+        return render_template('profile.php', query=query)
 
 
 @app.after_request

@@ -69,7 +69,25 @@
           {% endif %}
 
           {% if data != "calcerr" and data != "emptyerr" %}
-          heres data {{data}}
+          <div class="hs">Статистика по аккаунту</div>
+          <div class="content__center">
+          <img src="{{data.get("avatar")}}" class="photo__blogger" width="256" height="256">
+          <div class="tt__username">{{data.get("username")}}</div>
+
+
+        <div class="tt__stat__block">
+        <div class="tt__stat">{{data.get("totalSubs")}}<br><span style="font-size: 15px; font-weight: 200;">подписчики</span></div>
+        <div class="tt__stat">{{data.get("totalLikes")}}<br><span style="font-size: 15px; font-weight: 200;">лайки</span></div>
+        <div class="tt__stat">{{data.get("totalViews")}}<br><span style="font-size: 15px; font-weight: 200;">просмотров</span></div>
+        <div class="tt__stat">{{data.get("totalVideos")}}<br><span style="font-size: 15px; font-weight: 200;">тиктоков</span></div>
+        <div class="tt__stat">{{data.get("totalLiked")}}<br><span style="font-size: 15px; font-weight: 200;">лайкнул</span></div>
+        <div class="tt__stat">{{data.get("engagement")}}<br><span style="font-size: 15px; font-weight: 200;">вовлечённость</span></div>
+
+        </div><hr><br><br>
+        <div class="hs">Прибыль с видео</div>
+        <div class="money__blogger"><span style="color:#F165FA">{{data.get("low_income")}} - {{data.get("high_income")}} ₽</span></div>
+        <div class="hs">Рейтинг CheckTok</div>
+        <div class="money__blogger"><span style="color:#F165FA">{{data.get("rating")}}</span></div><hr><br>
         {% endif %}
         <div class="main__select">
             <div class="input__wrap">

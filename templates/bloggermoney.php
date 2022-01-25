@@ -67,17 +67,11 @@
         </div><hr><br><br>
         <div class="hs">Прибыль с видео</div>
         <div class="money__blogger"><span style="color:#F165FA">{{data.get("income_low")}} - {{data.get("income_high")}} ₽</span></div><hr>
-        <button class="main__btn">Хочу так же 💸</button>
+        <form action='order_report'>
+            <button class="main__btn" >Хочу так же 💸</button>
+        </form>
         <div class="content__text">Смотри ещё</div>
         <div class="tt__stat__block">
-          <div class="photo__more">
-            <a href="/howmuch"><img src="{{ url_for('static', filename='images/bloggers/kreed.png') }}" width="128" height="128"></a>
-            <div class="tt__username__more">Егор Крид</div>
-          </div>
-          <div class="photo__more">
-            <a href="/howmuch"><img src="{{ url_for('static', filename='images/bloggers/karnaval.png') }}" width="128" height="128"></a>
-            <div class="tt__username__more">Валя Карнавал</div>
-          </div>
         </div>
         </div>
       </div>

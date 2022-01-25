@@ -156,36 +156,42 @@
               <input type="hidden" name="name" id="name" value="xabibkaaa">
               <button type="submit"><img src="{{ url_for('static', filename='images/bloggers/xabibka.png') }}" width="128" height="128"></button>
               <div class="tt__username__more">@xabibkaaa</div>
+            </form>
           </div></br>
             <div class="photo__more">
             <form action="/bloggermoney" method="POST">
               <input type="hidden" name="name" id="name" value="pokrov">
               <button type="submit"><img src="{{ url_for('static', filename='images/bloggers/pokrov.png') }}" width="128" height="128"></button>
               <div class="tt__username__more">@pokrov</div>
+            </form>
           </div></br>
             <div class="photo__more">
             <form action="/bloggermoney" method="POST">
               <input type="hidden" name="name" id="name" value="samkamusic">
               <button type="submit"><img src="{{ url_for('static', filename='images/bloggers/samka.png') }}" width="128" height="128"></button>
               <div class="tt__username__more">@samkamusic</div>
+            </form>
           </div></br>
             <div class="photo__more">
             <form action="/bloggermoney" method="POST">
               <input type="hidden" name="name" id="name" value="_influesii">
               <button type="submit"><img src="{{ url_for('static', filename='images/bloggers/influesli.png') }}" width="128" height="128"></button>
               <div class="tt__username__more">@_influesii</div>
+            </form>
           </div></br>
             <div class="photo__more">
             <form action="/bloggermoney" method="POST">
               <input type="hidden" name="name" id="name" value="badbaarbie">
               <button type="submit"><img src="{{ url_for('static', filename='images/bloggers/badbarbie.png') }}" width="128" height="128"></button>
               <div class="tt__username__more">@badbaarbie</div>
+            </form>
           </div></br>
             <div class="photo__more">
             <form action="/bloggermoney" method="POST">
               <input type="hidden" name="name" id="name" value="thekiryalife">
               <button type="submit"><img src="{{ url_for('static', filename='images/bloggers/kirya.png') }}" width="128" height="128"></button>
               <div class="tt__username__more">@thekiryalife</div>
+            </form>
           </div></br>
 
         </div>
