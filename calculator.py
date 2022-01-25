@@ -1,5 +1,5 @@
 from TikTokApi import TikTokApi
-from __init__ import Stat, db
+from __init__ import Stat, Top, db
 from datetime import datetime, timedelta
 
 
@@ -9,15 +9,14 @@ def calculate(user):
         userid = temp['uniqueId']
 
         query = db.session.query(Stat).filter(Stat.username == userid).first()
-        if query:
-            if (datetime.now() - query.date).days < 1:
-                data = dict(username=str(query.username), avatar=str(query.avatar), totalSubs=str(query.subs),
-                            totalLikes=str(query.likes), totalVideos=str(query.videos), totalLiked=str(query.liked),
-                            totalViews=str(query.views), engagement=str(query.engagement),
-                            low_income=str(query.income_low), high_income=str(query.income_high),
-                            rating=str(query.rating))
+        if query and (datetime.now() - query.date).days < 1:
+            data = dict(username=str(query.username), avatar=str(query.avatar), totalSubs=str(query.subs),
+                        totalLikes=str(query.likes), totalVideos=str(query.videos), totalLiked=str(query.liked),
+                        totalViews=str(query.views), engagement=str(query.engagement),
+                        low_income=str(query.income_low), high_income=str(query.income_high),
+                        rating=str(query.rating))
 
-                return data
+            return data
         else:
             secuid = temp['secUid']
             result = TikTokApi.get_instance().user_posts(userID=userid, secUID=secuid, page_size=30, cursor=0)
@@ -269,16 +268,62 @@ def calculate(user):
                         liked=totalLiked, engagement=str(engagement), income_low=str(low_income),
                         income_high=str(high_income), rating=str(rating), date=datetime.now())
             try:
-                db.session.add(stat)
+                statq = Stat.query.get(username)
+                if statq:
+                    if (datetime.now() - statq.date).days >= 1:
+                        statq.username = str(username)
+                        statq.avatar = str(avatar)
+                        statq.subs = totalSubs
+                        statq.likes = totalLikes
+                        statq.views = totalViews
+                        statq.videos = totalVideos
+                        statq.liked = totalLiked
+                        statq.engagement = str(engagement)
+                        statq.income_low = str(low_income)
+                        statq.income_high = str(high_income)
+                        statq.rating = str(rating)
+                        statq.date = datetime.now()
+                else:
+                    db.session.add(stat)
+
                 db.session.commit()
             except Exception as fuck:
-                print("Unable to add stat to Stat DB: " + str(fuck))
+                return str("Unable to add stat to Stat DB: " + str(fuck))
 
-            data = dict(username=str(username), bio=str(bio), avatar=str(avatar), totalSubs=totalSubs,
-                        totalLikes=totalLikes, totalVideos=totalVideos, totalLiked=totalLiked,
+            if (username == "danya_milokhin" or username == "karna.val" or username == "egorkreed" or
+                username == "homm9k" or username == "karinakross" or username == "gavrilinaa" or
+                username == "egorkaship_official" or username == "a4omg" or username == "miaboyka" or
+                username == "_agentgirl_" or username == "kobyakov_vlad" or username == "kkarrrambaby" or
+                username == "rahimabram" or username == "dava_m" or username == "xabibkaaa" or
+                username == "pokrov" or username == "samkamusic" or username == "_influesii" or
+                username == "badbaarbie" or username == "thekiryalife"):
+                top = Top(username=str(username), avatar=str(avatar), subs=totalSubs,
+                          likes=totalLikes, income_low=str(low_income),
+                          income_high=str(high_income), rating=str(rating), date=datetime.now())
+                try:
+                    topq = Top.query.get(username)
+                    if topq:
+                        if (datetime.now() - topq.date).days >= 1:
+                            topq.username = str(username)
+                            topq.avatar = str(avatar)
+                            topq.subs = totalSubs
+                            topq.likes = totalLikes
+                            topq.income_low = str(low_income)
+                            topq.income_high = str(high_income)
+                            topq.rating = str(rating)
+                            topq.date = datetime.now()
+                    else:
+                        db.session.add(top)
+
+                    db.session.commit()
+                except Exception as fuck:
+                    return str("Unable to add top to Top DB: " + str(fuck))
+
+            data = dict(username=str(username), bio=str(bio), avatar=str(avatar), totalSubs=totalSubs, subs=totalSubs,
+                        totalLikes=totalLikes, likes=totalLikes, totalVideos=totalVideos, totalLiked=totalLiked,
                         totalViews=totalViews, totalComments=totalComments, totalShares=totalShares,
-                        engagement=str(engagement), low_income=str(low_income), high_income=str(high_income),
-                        rating=str(rating), amt=str(amt))
+                        engagement=str(engagement), low_income=str(low_income), income_low=str(low_income),
+                        high_income=str(high_income), income_high=str(high_income), rating=str(rating))
 
             return data
 

@@ -32,8 +32,20 @@
                 <a href="/" class="header__link">Главная</a>
               </li>
               <li>
-                <a href="/howmuch" class="header__link">Заработок блогеров</a>
+                <a href="/howmuch" class="header__link">Назад</a>
               </li>
+              {% if current_user.is_authenticated %}
+                <li>
+                <a href="/profile" class="header__link">Профиль</a>
+                </li>
+              {% else %}
+                <li>
+                <a href="/login" class="header__link">Войти</a>
+                </li>
+                <li>
+                <a href="/register" class="header__link">Зарегистрироваться</a>
+                </li>
+              {% endif %}
             </ul>
           </nav>
         </div>
@@ -42,19 +54,19 @@
 
     <div class="content">
       <div class="container">
-          <div class="hs">Сколько зарабатывает <span style="color:#F165FA">USERNAME?</span></div>
+          <div class="hs">Сколько зарабатывает <span style="color:#F165FA">{{data.get("username")}}?</span></div>
           <div class="content__center">
-          <img src="" class="photo__blogger" width="256" height="256">
-          <div class="tt__username">@username</div>
+          <img src="{{data.get("avatar")}}" class="photo__blogger" width="256" height="256">
+          <div class="tt__username">@{{data.get("username")}}</div>
 
 
         <div class="tt__stat__block">
-        <div class="tt__stat">XXX<br><span style="font-size: 15px; font-weight: 200;">подписчики</span></div>
-        <div class="tt__stat">XXX<br><span style="font-size: 15px; font-weight: 200;">лайки</span></div>
-        <div class="tt__stat">XXX<br><span style="font-size: 15px; font-weight: 200;">популярность</span></div>
+        <div class="tt__stat">{{data.get("subs")}}<br><span style="font-size: 15px; font-weight: 200;">подписчики</span></div>
+        <div class="tt__stat">{{data.get("likes")}}<br><span style="font-size: 15px; font-weight: 200;">лайки</span></div>
+        <div class="tt__stat">{{data.get("rating")}}<br><span style="font-size: 15px; font-weight: 200;">рейтинг checktok</span></div>
         </div><hr><br><br>
         <div class="hs">Прибыль с видео</div>
-        <div class="money__blogger"><span style="color:#F165FA">XXX - XXX ₽</span></div><hr>
+        <div class="money__blogger"><span style="color:#F165FA">{{data.get("income_low")}} - {{data.get("income_high")}} ₽</span></div><hr>
         <button class="main__btn">Хочу так же 💸</button>
         <div class="content__text">Смотри ещё</div>
         <div class="tt__stat__block">

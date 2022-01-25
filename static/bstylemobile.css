@@ -7,6 +7,12 @@
 html,body{
   font-family: 'Bitter', serif;
   height: 100%px;
+
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
 }
 
 .wrapper{
@@ -314,6 +320,13 @@ html {
   font-weight:500;
 }
 
+.content__text__small{
+  font-size: 20px;
+  line-height: 25px;
+  color: #fff;
+  font-weight:300;
+}
+
 .btn {
   display: inline-block;
   position: relative;
@@ -481,4 +494,21 @@ hr {
   padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 30px;
+}
+
+.profile__check {
+  width: 100%;
+  height: 40px;
+  background-color: #000;
+  text-align: left;
+  font-weight: bold;
+  color: #fff;
+  font-size: 16px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  padding: 10px 10px;
+}
+
+.empty__ {
+  height: 400px;
 }

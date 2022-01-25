@@ -1,18 +1,23 @@
-from flask import Flask, render_template, request
+from gevent import monkey
+monkey.patch_all()
+from flask import Flask, render_template, request, redirect, flash
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 import calculator
+from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
+from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
-
+app.secret_key = "Cactus is truly a tsundere among other plants"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 db = SQLAlchemy(app)
+manager = LoginManager(app)
 
 
-class User(db.Model):
-    userid = db.Column(db.Integer, primary_key=True)
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(24), nullable=False)
-    password = db.Column(db.String(32), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
 
     reports = db.relationship('Report', backref='user', lazy='dynamic')
 
@@ -29,39 +34,92 @@ class Stat(db.Model):
     income_low = db.Column(db.String(16), nullable=False)
     income_high = db.Column(db.String(16), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
-
-    top = db.relationship('Top', backref='stat', lazy='dynamic')
+    date = db.Column(db.DateTime, default=datetime.now())
 
 
-class Report(db.Model):
-    reportid = db.Column(db.Integer, primary_key=True)
+class Report(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), nullable=False)
     subs = db.Column(db.Integer, nullable=False)
     avg_views = db.Column(db.Integer, nullable=False)
     subs_to_views = db.Column(db.Integer, nullable=False)
     engagement = db.Column(db.Integer, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
+    date = db.Column(db.DateTime, default=datetime.now())
 
-    ownerid = db.Column(db.Integer, db.ForeignKey('user.userid'), nullable=False)
+    ownerid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
 class Top(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(32), primary_key=True)
     avatar = db.Column(db.String(255), nullable=False)
     subs = db.Column(db.String(16), nullable=False)
     likes = db.Column(db.String(16), nullable=False)
     income_low = db.Column(db.String(16), nullable=False)
     income_high = db.Column(db.String(16), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.DateTime, default=datetime.now())
 
-    username = db.Column(db.String(32), db.ForeignKey('stat.username'), nullable=False)
 
+@manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
 @app.route('/')
 def hello_world():
     return render_template("index.php")
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login_page():
+    login = request.form.get('login')
+    password= request.form.get('password')
+
+    if request.method == "POST":
+        if login and password:
+            user = User.query.filter_by(login=login).first()
+            if user:
+                if check_password_hash(user.password, password):
+                    login_user(user)
+                    return render_template("index.php")
+                else:
+                    flash("Пароль неверен! :(")
+            else:
+                flash("Такого юзверя мы еще не видели...")
+        else:
+            flash("Пожалуйста, введите логин и пароль!")
+
+    return render_template("login.php")
+
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register_page():
+    login = request.form.get('login')
+    password = request.form.get('password')
+    confirm_password = request.form.get('password_confirm')
+
+    if request.method == "POST":
+        if not (login or password or confirm_password):
+            flash("Пожалуйста, заполните все поля!")
+        elif password != confirm_password:
+            flash("Пароли не совпадают! :(")
+        else:
+            hash = generate_password_hash(password)
+            new_user = User(login=login, password=hash)
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+
+            return render_template('index.php')
+
+    return render_template('register.php')
+
+
+@app.route('/logout')
+def logout_page():
+    logout_user()
+    return render_template('index.php')
 
 
 @app.route('/howmuch')
@@ -69,9 +127,22 @@ def howmuch():
     return render_template("howmuch.php")
 
 
-@app.route('/bloggermoney')
-def milokhin():
-    return render_template("bloggermoney.php")
+@app.route('/bloggermoney', methods=['POST', 'GET'])
+def topblogger():
+    data = None
+    if request.method == 'POST':
+        name = str(request.form['name'])
+        query = db.session.query(Top).filter(Top.username == name).first()
+        if query and (datetime.now() - query.date).days < 1:
+            data = dict(username=str(query.username), avatar=str(query.avatar), subs=str(query.subs),
+                        likes=str(query.likes), income_low=str(query.income_low),
+                        income_high=str(query.income_high), rating=str(query.rating))
+            return render_template('bloggermoney.php', data=data)
+        else:
+            data = calculator.calculate(name)
+            return render_template('bloggermoney.php', data=data)
+    else:
+        return render_template("howmuch.php")
 
 
 @app.route('/income', methods=['POST', 'GET'])
@@ -86,5 +157,18 @@ def calc():
     return render_template('income.php', data=data)
 
 
+@app.route('/profile')
+def profile():
+    return render_template('profile.php')
+
+
+@app.after_request
+def redirect_to_auth(response):
+    if response.status_code == 401:
+        return(render_template('login.php'))
+
+    return response
+
+
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

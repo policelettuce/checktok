@@ -32,8 +32,20 @@
                 <a href="/" class="header__link">Главная</a>
               </li>
               <li>
-                <a href="/howmuch" class="header__link">Заработок блогеров</a>
+                <a href="/howmuch" class="header__link">Топ блогеров</a>
               </li>
+              {% if current_user.is_authenticated %}
+                <li>
+                <a href="/profile" class="header__link">Профиль</a>
+                </li>
+              {% else %}
+                <li>
+                <a href="/login" class="header__link">Войти</a>
+                </li>
+                <li>
+                <a href="/register" class="header__link">Зарегистрироваться</a>
+                </li>
+              {% endif %}
             </ul>
           </nav>
         </div>
@@ -57,7 +69,7 @@
           {% endif %}
 
           {% if data != "calcerr" and data != "emptyerr" %}
-          Here is your data! {{ data }}
+          heres data {{data}}
         {% endif %}
         <div class="main__select">
             <div class="input__wrap">

@@ -34,11 +34,21 @@
           <nav class="header__menu">
             <ul class="header__list">
               <li>
-                <a href="/howmuch" class="header__link">Как мне заработать?</a>
+                <a href="/howmuch" class="header__link">Топ блогеров</a>
               </li>
-              <li>
-                <a href="/howmuch" class="header__link">Заработок блогеров</a>
-              </li>
+
+              {% if current_user.is_authenticated %}
+                <li>
+                <a href="/profile" class="header__link">Профиль</a>
+                </li>
+              {% else %}
+                <li>
+                <a href="/login" class="header__link">Войти</a>
+                </li>
+                <li>
+                <a href="/register" class="header__link">Зарегистрироваться</a>
+                </li>
+              {% endif %}
             </ul>
           </nav>
         </div>
